@@ -1,0 +1,3 @@
+- name: print out a message simulating a DB startup
+  debug:
+    msg: "Startup DB {{ dbname }} on {{ inventory_hostname }} on port ID {{ db_details_var.portid }}"

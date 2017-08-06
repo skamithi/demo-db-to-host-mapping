@@ -1,0 +1,21 @@
+# Playbook to be included to figure out which database matches is found on which host.
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - assert:
+        that: dbname is defined
+        msg: "dbname variable is required but is not defined"
+
+    - name: Connect to the Local ansible server and parse out all the database to host mappings
+      set_fact:
+        db_mapping: "{{ hostvars|db_to_host_map(dbname) }}"
+
+    - name: |
+        Check that the database name entered exists in the mapping. After that connect the host found
+        where the database resides
+      assert:
+        that: db_mapping != ''
+        msg: "Unable to find the host of database {{ dbname }}"
+

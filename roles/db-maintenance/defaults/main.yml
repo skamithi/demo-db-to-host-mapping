@@ -1,0 +1,2 @@
+# Set DB action. Can be "shutdown" and "startup"
+# db_action: ""

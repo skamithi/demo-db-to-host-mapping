@@ -1,0 +1,3 @@
+- name: print out a message simulating a DB shutdown
+  debug:
+    msg: "Shutting down DB {{ dbname }} on {{ inventory_hostname }} on port ID {{ db_details_var.portid }}"

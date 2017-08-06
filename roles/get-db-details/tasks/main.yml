@@ -1,0 +1,8 @@
+- assert:
+    that: dbname is defined
+    msg: "dbname variable is required but is not defined"
+
+- name: Get all the details regarding the database
+  set_fact:
+    db_details_var: "{{ dbs|db_details(dbname) }}"
+

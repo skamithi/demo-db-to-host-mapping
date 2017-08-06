@@ -1,0 +1,5 @@
+# Name of the database to find the inventory metadata
+# By default this is blank and is set by extra-vars
+#
+# dbname: ''
+
