@@ -24,4 +24,4 @@
 
     - name: print out a message simulating a DB connection
       debug:
-        msg: "Connecting to DB {{ dbname }} on {{ ansible_host }} on port ID {{ db_details_var.portid }}"
+        msg: "Connecting to DB {{ dbname }} on {{ inventory_hostname }} on port ID {{ db_details_var.portid }}"
