@@ -1,4 +1,4 @@
-# Playbook where a DB name is given and the correct execution is done
+# DB To Host Mapping Demo - Ansible Playbook
 
 This sample project shows how you can define an host inventory that houses
 multiple unique databases and then provide a playbook that
