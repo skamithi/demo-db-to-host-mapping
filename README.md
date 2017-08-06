@@ -147,7 +147,8 @@ localhost                  : ok=2    changed=0    unreachable=0    failed=1
 ### Correct Database name
 
 ```
-% ansible-playbook --private-key=keys/ansible_test  -i inventory.py -e "dbname=dbS001" demo.yml                             <roles ✗>
+
+nsible-playbook --private-key=keys/ansible_test  -i inventory.py -e "dbname=dbS001" demo.yml
 
 PLAY [localhost] ***************************************************************************************************************************************************************
 
@@ -182,15 +183,6 @@ TASK [get-db-details : Get all the details regarding the database] *************
 ok: [ts001]
 
 TASK [db-maintenance : include] ************************************************************************************************************************************************
-included: /home/skamithi/git/demo-db-to-host-mapping/roles/db-maintenance/tasks/startup.yml for ts001
-
-TASK [db-maintenance : print out a message simulating a DB startup] ************************************************************************************************************
-ok: [ts001] => {
-    "changed": false,
-    "msg": "Startup DB dbS001 on ts001 on port ID 30001"
-}
-
-TASK [db-maintenance : include] ************************************************************************************************************************************************
 included: /home/skamithi/git/demo-db-to-host-mapping/roles/db-maintenance/tasks/shutdown.yml for ts001
 
 TASK [db-maintenance : print out a message simulating a DB shutdown] ***********************************************************************************************************
@@ -199,9 +191,16 @@ ok: [ts001] => {
     "msg": "Shutting down DB dbS001 on ts001 on port ID 30001"
 }
 
+TASK [db-maintenance : include] ************************************************************************************************************************************************
+included: /home/skamithi/git/demo-db-to-host-mapping/roles/db-maintenance/tasks/startup.yml for ts001
+
+TASK [db-maintenance : print out a message simulating a DB startup] ************************************************************************************************************
+ok: [ts001] => {
+    "changed": false,
+    "msg": "Startup DB dbS001 on ts001 on port ID 30001"
+}
+
 PLAY RECAP *********************************************************************************************************************************************************************
 localhost                  : ok=3    changed=0    unreachable=0    failed=0
 ts001                      : ok=7    changed=0    unreachable=0    failed=0
-
-
 ```
