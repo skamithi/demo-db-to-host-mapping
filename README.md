@@ -3,10 +3,12 @@
 This sample project shows how you can define an host inventory that houses
 multiple unique databases and then provide a playbook that
 
-a) Takes a database name as a parameter
-b) The playbook will figure out the correct host to connect to and run a simulation
+a. Takes a database name as a parameter
+
+b. The playbook will figure out the correct host to connect to and run a simulation
 to confirm that it is connected to the correct host that houses that database.
-c) The playbook has some checks. That is if the dbname is bogus then take no action and
+
+c. The playbook has some checks. That is if the dbname is bogus then take no action and
 alert the user of the fact. Also not all hosts listed in the inventory must contain ``dbs`` entries.
 Script is intelligent enough to only search hosts with ``dbs`` entries.
 
@@ -95,12 +97,12 @@ Also database names start with "dbS0XX" where XX is a number starting from 00 to
 In this demo first test to see what happens when you put in a bogus database name
 
 ```
-ansible-playbook --private-key=keys/ansible.test demo.yml -i inventory.py -e "dbname=bogus"
+ansible-playbook --private-key=keys/ansible_test demo.yml -i inventory.py -e "dbname=bogus"
 ```
 
 Then test to see what happens when you put in a valid name
 
 ```
-ansible-playbook --private-key=keys/ansible.test demo.yml -i inventory.py -e "dbname=dbH002"
+ansible-playbook --private-key=keys/ansible_test demo.yml -i inventory.py -e "dbname=dbH002"
 ```
 
