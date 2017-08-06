@@ -106,3 +106,68 @@ Then test to see what happens when you put in a valid name
 ansible-playbook --private-key=keys/ansible_test demo.yml -i inventory.py -e "dbname=dbH002"
 ```
 
+## Demo Output
+
+
+### Wrong database name
+```
+% ansible-playbook --private-key=keys/ansible_test  -i inventory.py -e "dbname=dbS" demo.yml                               <master ✗>
+
+PLAY [localhost] ***************************************************************************************************************************************************************
+
+TASK [Connect to the Local ansible server and parse out all the database to host mappings] *************************************************************************************
+ok: [localhost]
+
+TASK [Check that the database name entered exists in the mapping. After that connect the host found
+where the database resides] ************************************************
+fatal: [localhost]: FAILED! => {
+    "assertion": "db_mapping != ''",
+    "changed": false,
+    "evaluated_to": false,
+    "failed": true,
+    "msg": "Unable to find the host of database dbS"
+}
+  to retry, use: --limit @/home/skamithi/git/demo-db-to-host-mapping/demo.retry
+
+PLAY RECAP *********************************************************************************************************************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=1
+
+```
+
+
+### Correct Database name
+
+```
+% ansible-playbook --private-key=keys/ansible_test  -i inventory.py -e "dbname=dbS010" demo.yml                              <master>
+
+PLAY [localhost] ***************************************************************************************************************************************************************
+
+TASK [Connect to the Local ansible server and parse out all the database to host mappings] *************************************************************************************
+ok: [localhost]
+
+TASK [Check that the database name entered exists in the mapping. After that connect the host found
+where the database resides] ************************************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+PLAY [all:&ts010] **************************************************************************************************************************************************************
+
+TASK [Gathering Facts] *********************************************************************************************************************************************************
+ok: [ts010]
+
+TASK [Get all the details regarding the database] ******************************************************************************************************************************
+ok: [ts010]
+
+TASK [print out a message simulating a DB connection] **************************************************************************************************************************
+ok: [ts010] => {
+    "changed": false,
+    "msg": "Connecting to DB dbS010 on localhost on port ID 30010"
+}
+
+PLAY RECAP *********************************************************************************************************************************************************************
+localhost                  : ok=2    changed=0    unreachable=0    failed=0
+ts010                      : ok=3    changed=0    unreachable=0    failed=0
+
+```
