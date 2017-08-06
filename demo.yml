@@ -4,7 +4,7 @@
 - hosts: "all:&{{ hostvars['localhost']['db_mapping']['host']}}"
   roles:
     - role: db-maintenance
-      db_action: 'startup'
+      db_action: 'shutdown'
 
     - role: db-maintenance
-      db_action: 'shutdown'
+      db_action: 'startup'
