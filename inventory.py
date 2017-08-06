@@ -16,6 +16,7 @@ class DockerInventory(object):
         self.hostname_base = 'ts'
         self.software_groups = ['app', 'web', 'db']
         self.environment_groups = ['dev', 'test', 'prod']
+        # Count must be a multiple of 18. Need to fix this bug at some point
         self.host_count = 18
         self.host_range = range(1, self.host_count+1)
         self.ansible_groups = {}

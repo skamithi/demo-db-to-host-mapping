@@ -2,6 +2,7 @@
 - hosts: localhost
   connection: local
   vars:
+    # Count must be multiple of 18
     docker_count: 18
   tasks:
     - name: create several ssh docker containers
