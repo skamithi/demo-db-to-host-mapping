@@ -12,6 +12,8 @@ c. The playbook has some checks. That is if the dbname is bogus then take no act
 alert the user of the fact. Also not all hosts listed in the inventory must contain ``dbs`` entries.
 Script is intelligent enough to only search hosts with ``dbs`` entries.
 
+d. Shows you how to use roles with this configuration
+
 The Ansible inventory data feed into Ansible looks something like this:
 
 ```
@@ -111,9 +113,15 @@ ansible-playbook --private-key=keys/ansible_test demo.yml -i inventory.py -e "db
 
 ### Wrong database name
 ```
-% ansible-playbook --private-key=keys/ansible_test  -i inventory.py -e "dbname=dbS" demo.yml                               <master ✗>
+:% ansible-playbook --private-key=keys/ansible_test  -i inventory.py -e "dbname=db" demo.yml                                 <roles ✗>
 
 PLAY [localhost] ***************************************************************************************************************************************************************
+
+TASK [assert] ******************************************************************************************************************************************************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
 
 TASK [Connect to the Local ansible server and parse out all the database to host mappings] *************************************************************************************
 ok: [localhost]
@@ -125,12 +133,13 @@ fatal: [localhost]: FAILED! => {
     "changed": false,
     "evaluated_to": false,
     "failed": true,
-    "msg": "Unable to find the host of database dbS"
+    "msg": "Unable to find the host of database db"
 }
   to retry, use: --limit @/home/skamithi/git/demo-db-to-host-mapping/demo.retry
 
 PLAY RECAP *********************************************************************************************************************************************************************
-localhost                  : ok=1    changed=0    unreachable=0    failed=1
+localhost                  : ok=2    changed=0    unreachable=0    failed=1
+
 
 ```
 
@@ -138,9 +147,15 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=1
 ### Correct Database name
 
 ```
-% ansible-playbook --private-key=keys/ansible_test  -i inventory.py -e "dbname=dbS010" demo.yml                              <master>
+% ansible-playbook --private-key=keys/ansible_test  -i inventory.py -e "dbname=dbS001" demo.yml                             <roles ✗>
 
 PLAY [localhost] ***************************************************************************************************************************************************************
+
+TASK [assert] ******************************************************************************************************************************************************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
 
 TASK [Connect to the Local ansible server and parse out all the database to host mappings] *************************************************************************************
 ok: [localhost]
@@ -152,22 +167,41 @@ ok: [localhost] => {
     "msg": "All assertions passed"
 }
 
-PLAY [all:&ts010] **************************************************************************************************************************************************************
+PLAY [all:&ts001] **************************************************************************************************************************************************************
 
 TASK [Gathering Facts] *********************************************************************************************************************************************************
-ok: [ts010]
+ok: [ts001]
 
-TASK [Get all the details regarding the database] ******************************************************************************************************************************
-ok: [ts010]
-
-TASK [print out a message simulating a DB connection] **************************************************************************************************************************
-ok: [ts010] => {
+TASK [get-db-details : assert] *************************************************************************************************************************************************
+ok: [ts001] => {
     "changed": false,
-    "msg": "Connecting to DB dbS010 on localhost on port ID 30010"
+    "msg": "All assertions passed"
+}
+
+TASK [get-db-details : Get all the details regarding the database] *************************************************************************************************************
+ok: [ts001]
+
+TASK [db-maintenance : include] ************************************************************************************************************************************************
+included: /home/skamithi/git/demo-db-to-host-mapping/roles/db-maintenance/tasks/startup.yml for ts001
+
+TASK [db-maintenance : print out a message simulating a DB startup] ************************************************************************************************************
+ok: [ts001] => {
+    "changed": false,
+    "msg": "Startup DB dbS001 on ts001 on port ID 30001"
+}
+
+TASK [db-maintenance : include] ************************************************************************************************************************************************
+included: /home/skamithi/git/demo-db-to-host-mapping/roles/db-maintenance/tasks/shutdown.yml for ts001
+
+TASK [db-maintenance : print out a message simulating a DB shutdown] ***********************************************************************************************************
+ok: [ts001] => {
+    "changed": false,
+    "msg": "Shutting down DB dbS001 on ts001 on port ID 30001"
 }
 
 PLAY RECAP *********************************************************************************************************************************************************************
-localhost                  : ok=2    changed=0    unreachable=0    failed=0
-ts010                      : ok=3    changed=0    unreachable=0    failed=0
+localhost                  : ok=3    changed=0    unreachable=0    failed=0
+ts001                      : ok=7    changed=0    unreachable=0    failed=0
+
 
 ```
