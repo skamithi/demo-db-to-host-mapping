@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    dbname: 'sd'
+  tasks:
+    - name: Connect to the Local ansible server and parse out all the database to host mappings
+      set_fact:
+        db_mapping: "{{ hostvars|db_to_host_map(dbname) }}"
+
+    - name: |
+        Check that the database name entered exists in the mapping. After that connect the host found
+        where the database resides
+      assert:
+        that: db_mapping != ''
+        msg: "Unable to find the host of database {{ dbname }}"
+
+- hosts: "all:&{{ hostvars['localhost']['db_mapping']['host']}}"
+  tasks:
+    - name: Get all the details regarding the database
+      set_fact:
+        db_details_var: "{{ dbs|db_details(dbname) }}"
+
+    - name: print out a message simulating a DB connection
+      debug:
+        msg: "Connecting to DB {{ dbname }} on {{ ansible_host }} on port ID {{ db_details_var.portid }}"
